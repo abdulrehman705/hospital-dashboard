@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/sheet'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { Task } from '../data/schema'
+import { departments } from '../data/data'
 
 interface Props {
   open: boolean
@@ -32,8 +33,8 @@ interface Props {
 }
 
 const formSchema = z.object({
-  title: z.string().min(1, 'Title is required.'),
-  status: z.string().min(1, 'Please select a status.'),
+  name: z.string().min(1, 'Title is required.'),
+  department: z.string().min(1, 'Please select a status.'),
   label: z.string().min(1, 'Please select a label.'),
   priority: z.string().min(1, 'Please choose a priority.'),
 })
@@ -45,8 +46,8 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
   const form = useForm<TasksForm>({
     resolver: zodResolver(formSchema),
     defaultValues: currentRow ?? {
-      title: '',
-      status: '',
+      name: '',
+      department: '',
       label: '',
       priority: '',
     },
@@ -69,11 +70,11 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
     >
       <SheetContent className='flex flex-col'>
         <SheetHeader className='text-left'>
-          <SheetTitle>{isUpdate ? 'Update' : 'Create'} Task</SheetTitle>
+          <SheetTitle>{isUpdate ? 'Update' : 'Add'} Hospital</SheetTitle>
           <SheetDescription>
             {isUpdate
-              ? 'Update the task by providing necessary info.'
-              : 'Add a new task by providing necessary info.'}
+              ? 'Update the hospital data by providing necessary info.'
+              : 'Add a new Hospital by providing necessary info.'}
             Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
@@ -85,12 +86,12 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
           >
             <FormField
               control={form.control}
-              name='title'
+              name='name'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder='Enter a title' />
+                    <Input {...field} placeholder='Enter hospital Name' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -98,27 +99,21 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
             />
             <FormField
               control={form.control}
-              name='status'
+              name='department'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>Department</FormLabel>
                   <SelectDropdown
                     defaultValue={field.value}
                     onValueChange={field.onChange}
                     placeholder='Select dropdown'
-                    items={[
-                      { label: 'In Progress', value: 'in progress' },
-                      { label: 'Backlog', value: 'backlog' },
-                      { label: 'Todo', value: 'todo' },
-                      { label: 'Canceled', value: 'canceled' },
-                      { label: 'Done', value: 'done' },
-                    ]}
+                    items={departments}
                   />
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name='label'
               render={({ field }) => (
@@ -155,7 +150,7 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name='priority'

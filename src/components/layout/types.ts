@@ -8,7 +8,7 @@ interface User {
 
 interface Team {
   name: string
-  logo: React.ElementType
+  logo: React.ElementType | string
   plan: string
 }
 
@@ -37,7 +37,7 @@ interface NavGroup {
 
 interface SidebarData {
   user: User
-  teams: Team[]
+  teams: Team
   navGroups: NavGroup[]
 }
 

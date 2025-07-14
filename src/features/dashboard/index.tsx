@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+// import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -6,26 +6,27 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Tabs, TabsContent,
+} from '@/components/ui/tabs'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { TopNav } from '@/components/layout/top-nav'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
+import LogoutLogo from '@/assets/logout.svg'
 
 export default function Dashboard() {
   return (
     <>
       {/* ===== Top Heading ===== */}
       <Header>
-        <TopNav links={topNav} />
         <div className='ml-auto flex items-center space-x-4'>
-          <Search />
-          <ThemeSwitch />
-          <ProfileDropdown />
+          <button
+            className="pr-4 text-gray-600 transition-colors duration-200 hover:text-gray-900"
+          >
+            <img src={LogoutLogo} alt="Logout" className="h-6 px-6" />
+          </button>
+
         </div>
       </Header>
 
@@ -33,16 +34,16 @@ export default function Dashboard() {
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
           <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-          <div className='flex items-center space-x-2'>
+          {/* <div className='flex items-center space-x-2'>
             <Button>Download</Button>
-          </div>
+          </div> */}
         </div>
         <Tabs
           orientation='vertical'
           defaultValue='overview'
           className='space-y-4'
         >
-          <div className='w-full overflow-x-auto pb-2'>
+          {/* <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
               <TabsTrigger value='overview'>Overview</TabsTrigger>
               <TabsTrigger value='analytics' disabled>
@@ -55,13 +56,13 @@ export default function Dashboard() {
                 Notifications
               </TabsTrigger>
             </TabsList>
-          </div>
+          </div> */}
           <TabsContent value='overview' className='space-y-4'>
-            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Total Revenue
+                    Total Hospitals
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -77,16 +78,16 @@ export default function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
-                  <p className='text-muted-foreground text-xs'>
+                  <div className='text-2xl font-bold'>1429</div>
+                  {/* <p className='text-muted-foreground text-xs'>
                     +20.1% from last month
-                  </p>
+                  </p> */}
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Subscriptions
+                    Total Doctors
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -104,15 +105,15 @@ export default function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+2350</div>
-                  <p className='text-muted-foreground text-xs'>
+                  <div className='text-2xl font-bold'>2350</div>
+                  {/* <p className='text-muted-foreground text-xs'>
                     +180.1% from last month
-                  </p>
+                  </p> */}
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>Sales</CardTitle>
+                  <CardTitle className='text-sm font-medium'>Sessions</CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 24 24'
@@ -128,13 +129,13 @@ export default function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+12,234</div>
-                  <p className='text-muted-foreground text-xs'>
+                  <div className='text-2xl font-bold'>2,234</div>
+                  {/* <p className='text-muted-foreground text-xs'>
                     +19% from last month
-                  </p>
+                  </p> */}
                 </CardContent>
               </Card>
-              <Card>
+              {/* <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
                     Active Now
@@ -158,7 +159,7 @@ export default function Dashboard() {
                     +201 since last hour
                   </p>
                 </CardContent>
-              </Card>
+              </Card> */}
             </div>
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
               <Card className='col-span-1 lg:col-span-4'>
@@ -171,9 +172,9 @@ export default function Dashboard() {
               </Card>
               <Card className='col-span-1 lg:col-span-3'>
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>Recent Visits</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    You made 265 treatments this month.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -187,30 +188,3 @@ export default function Dashboard() {
     </>
   )
 }
-
-const topNav = [
-  {
-    title: 'Overview',
-    href: 'dashboard/overview',
-    isActive: true,
-    disabled: false,
-  },
-  {
-    title: 'Customers',
-    href: 'dashboard/customers',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Products',
-    href: 'dashboard/products',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Settings',
-    href: 'dashboard/settings',
-    isActive: false,
-    disabled: true,
-  },
-]

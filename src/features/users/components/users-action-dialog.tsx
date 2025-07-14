@@ -99,22 +99,22 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          ...currentRow,
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        }
+        ...currentRow,
+        password: '',
+        confirmPassword: '',
+        isEdit,
+      }
       : {
-          firstName: '',
-          lastName: '',
-          username: '',
-          email: '',
-          role: '',
-          phoneNumber: '',
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        },
+        firstName: '',
+        lastName: '',
+        username: '',
+        email: '',
+        role: '',
+        phoneNumber: '',
+        password: '',
+        confirmPassword: '',
+        isEdit,
+      },
   })
 
   const onSubmit = (values: UserForm) => {
@@ -135,16 +135,16 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-left'>
-          <DialogTitle>{isEdit ? 'Edit User' : 'Add New User'}</DialogTitle>
+          <DialogTitle>{isEdit ? 'Edit Doctor' : 'Add New Doctor'}</DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
+            {isEdit ? 'Update the Doctor here. ' : 'Create new Doctor here. '}
             Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <div className='-mr-4 h-[26.25rem] w-full overflow-y-auto py-1 pr-4'>
           <Form {...form}>
             <form
-              id='user-form'
+              id='doctor-form'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 p-0.5'
             >
@@ -310,7 +310,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
           </Form>
         </div>
         <DialogFooter>
-          <Button type='submit' form='user-form'>
+          <Button type='submit' form='doctor-form'>
             Save changes
           </Button>
         </DialogFooter>

@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/collapsible'
 import {
   SidebarGroup,
-  SidebarGroupLabel,
+  // SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -33,7 +33,7 @@ export function NavGroup({ title, items }: NavGroup) {
   const href = useLocation({ select: (location) => location.href })
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>{title}</SidebarGroupLabel>
+      {/* <SidebarGroupLabel>{title}</SidebarGroupLabel> */}
       <SidebarMenu>
         {items.map((item) => {
           const key = `${item.title}-${item.url}`
@@ -92,7 +92,7 @@ const SidebarMenuCollapsible = ({
     >
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
-          <SidebarMenuButton tooltip={item.title}>
+          <SidebarMenuButton tooltip={item.title} size={'lg'}>
             {item.icon && <item.icon />}
             <span>{item.title}</span>
             {item.badge && <NavBadge>{item.badge}</NavBadge>}
@@ -136,6 +136,7 @@ const SidebarMenuCollapsedDropdown = ({
           <SidebarMenuButton
             tooltip={item.title}
             isActive={checkIsActive(href, item)}
+            size={'lg'}
           >
             {item.icon && <item.icon />}
             <span>{item.title}</span>
