@@ -29,7 +29,7 @@ export const sidebarData: SidebarData = {
         },
         {
           title: 'Hospital',
-          url: '/tasks',
+          url: '/hospitals',
           icon: IconChecklist,
         },
         // {
@@ -45,7 +45,7 @@ export const sidebarData: SidebarData = {
         // },
         {
           title: 'Doctors',
-          url: '/users',
+          url: '/doctors',
           icon: IconUsers,
         },
         // {

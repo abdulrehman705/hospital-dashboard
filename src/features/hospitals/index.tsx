@@ -8,7 +8,7 @@ import TasksProvider from './context/tasks-context'
 import { hospitals } from './data/hospitals'
 import LogoutLogo from '@/assets/logout.svg'
 
-export default function Tasks() {
+export default function Hospitals() {
   return (
     <TasksProvider>
       <Header>

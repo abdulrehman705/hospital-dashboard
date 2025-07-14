@@ -11,7 +11,7 @@ import UsersProvider from './context/users-context'
 import { userListSchema } from './data/schema'
 import { users } from './data/users'
 
-export default function Users() {
+export default function Doctors() {
   // Parse user list
   const userList = userListSchema.parse(users)
 
