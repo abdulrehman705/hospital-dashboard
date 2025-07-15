@@ -16,7 +16,7 @@ const doctorDepartmentSchema = z.union([
   z.literal('ED'),
 ])
 
-const userSchema = z.object({
+const doctorSchema = z.object({
   id: z.string(),
   firstName: z.string(),
   lastName: z.string(),
@@ -28,6 +28,6 @@ const userSchema = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
-export type User = z.infer<typeof userSchema>
+export type Doctor = z.infer<typeof doctorSchema>
 
-export const userListSchema = z.array(userSchema)
+export const doctorListSchema = z.array(doctorSchema)

@@ -4,11 +4,11 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import LongText from '@/components/long-text'
 import { callTypes, departments } from '../data/data'
-import { User } from '../data/schema'
+import { Doctor } from '../data/schema'
 import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<Doctor>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -45,7 +45,7 @@ export const columns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title='Username' />
     ),
     cell: ({ row }) => (
-      <LongText className='max-w-36'>{row.getValue('username')}</LongText>
+      <LongText className='max-w-26'>{row.getValue('username')}</LongText>
     ),
     meta: {
       className: cn(
