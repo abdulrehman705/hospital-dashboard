@@ -9,3 +9,22 @@ export const callTypes = new Map<UserStatus, string>([
     'bg-destructive/10 dark:bg-destructive/50 text-destructive dark:text-primary border-destructive/10',
   ],
 ])
+
+export const departments = [
+  {
+    value: 'ED',
+    label: 'Emergency Department',
+  },
+  {
+    value: 'PC',
+    label: 'Primary Care',
+  },
+  {
+    value: 'OPD',
+    label: 'Outpatient Department',
+  },
+  {
+    value: 'REVIEW',
+    label: 'Paitent Review',
+  }
+];

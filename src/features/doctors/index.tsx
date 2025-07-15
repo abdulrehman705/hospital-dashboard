@@ -38,7 +38,7 @@ export default function Doctors() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Doctors List</h2>
             <p className='text-muted-foreground'>
-              Manage Doctors and their roles here.
+              Manage Doctors and their departments here.
             </p>
           </div>
           <UsersPrimaryButtons />

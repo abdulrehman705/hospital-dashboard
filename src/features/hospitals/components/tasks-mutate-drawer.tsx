@@ -12,7 +12,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Sheet,
   SheetClose,
@@ -22,9 +21,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { SelectDropdown } from '@/components/select-dropdown'
 import { Task } from '../data/schema'
-import { departments } from '../data/data'
 
 interface Props {
   open: boolean
@@ -34,9 +31,8 @@ interface Props {
 
 const formSchema = z.object({
   name: z.string().min(1, 'Title is required.'),
-  department: z.string().min(1, 'Please select a status.'),
-  label: z.string().min(1, 'Please select a label.'),
-  priority: z.string().min(1, 'Please choose a priority.'),
+  phone: z.string().min(1, 'Phone Number is required.'),
+  email: z.string().min(1, 'Phone Number is required.').email('Email is Invalid'),
 })
 type TasksForm = z.infer<typeof formSchema>
 
@@ -47,9 +43,8 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: currentRow ?? {
       name: '',
-      department: '',
-      label: '',
-      priority: '',
+      phone: '',
+      email: '',
     },
   })
 
@@ -80,7 +75,7 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
         </SheetHeader>
         <Form {...form}>
           <form
-            id='tasks-form'
+            id='hospital-form'
             onSubmit={form.handleSubmit(onSubmit)}
             className='flex-1 space-y-5 px-4'
           >
@@ -99,89 +94,25 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
             />
             <FormField
               control={form.control}
-              name='department'
+              name='phone'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Department</FormLabel>
-                  <SelectDropdown
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                    placeholder='Select dropdown'
-                    items={departments}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* <FormField
-              control={form.control}
-              name='label'
-              render={({ field }) => (
-                <FormItem className='relative space-y-3'>
-                  <FormLabel>Label</FormLabel>
+                  <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className='flex flex-col space-y-1'
-                    >
-                      <FormItem className='flex items-center space-y-0 space-x-3'>
-                        <FormControl>
-                          <RadioGroupItem value='documentation' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>
-                          Documentation
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className='flex items-center space-y-0 space-x-3'>
-                        <FormControl>
-                          <RadioGroupItem value='feature' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>Feature</FormLabel>
-                      </FormItem>
-                      <FormItem className='flex items-center space-y-0 space-x-3'>
-                        <FormControl>
-                          <RadioGroupItem value='bug' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>Bug</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
+                    <Input {...field} placeholder='Enter hospital phone number' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
+            />
             <FormField
               control={form.control}
-              name='priority'
+              name='email'
               render={({ field }) => (
-                <FormItem className='relative space-y-3'>
-                  <FormLabel>Priority</FormLabel>
+                <FormItem className='space-y-1'>
+                  <FormLabel>email</FormLabel>
                   <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className='flex flex-col space-y-1'
-                    >
-                      <FormItem className='flex items-center space-y-0 space-x-3'>
-                        <FormControl>
-                          <RadioGroupItem value='high' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>High</FormLabel>
-                      </FormItem>
-                      <FormItem className='flex items-center space-y-0 space-x-3'>
-                        <FormControl>
-                          <RadioGroupItem value='medium' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>Medium</FormLabel>
-                      </FormItem>
-                      <FormItem className='flex items-center space-y-0 space-x-3'>
-                        <FormControl>
-                          <RadioGroupItem value='low' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>Low</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
+                    <Input {...field} placeholder='Enter hospital email' type='email' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -193,7 +124,7 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
           <SheetClose asChild>
             <Button variant='outline'>Close</Button>
           </SheetClose>
-          <Button form='tasks-form' type='submit'>
+          <Button form='hospital-form' type='submit'>
             Save changes
           </Button>
         </SheetFooter>

@@ -3,11 +3,10 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import LongText from '@/components/long-text'
-import { callTypes } from '../data/data'
+import { callTypes, departments } from '../data/data'
 import { User } from '../data/schema'
 import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
-import { departments } from '@/features/hospitals/data/data'
 
 export const columns: ColumnDef<User>[] = [
   {

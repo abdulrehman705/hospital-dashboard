@@ -25,7 +25,7 @@ import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { User } from '../data/schema'
-import { departments } from '@/features/hospitals/data/data'
+import { departments } from '../data/data'
 
 const formSchema = z
   .object({
