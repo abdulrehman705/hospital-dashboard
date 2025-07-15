@@ -12,13 +12,9 @@ export default function Hospitals() {
   return (
     <TasksProvider>
       <Header>
-        {/* <TopNav links={topNav} /> */}
         <div className='ml-auto flex items-center space-x-4'>
-          {/* <Search /> */}
-          {/* <ThemeSwitch /> */}
-          {/* <ProfileDropdown /> */}
           <button
-            className="pr-4 text-gray-600 transition-colors duration-200 hover:text-gray-900"
+            className="text-gray-600 transition-colors duration-200 hover:text-gray-900"
           >
             <img src={LogoutLogo} alt="Logout" className="h-6 px-6" />
           </button>
