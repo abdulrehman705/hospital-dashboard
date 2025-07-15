@@ -12,23 +12,17 @@ export const users = Array.from({ length: 20 }, () => {
       .toLocaleLowerCase(),
     email: faker.internet.email({ firstName }).toLocaleLowerCase(),
     phoneNumber: faker.phone.number({ style: 'international' }),
-    // department: faker.helpers.arrayElement([
-    //   'REVIEW',
-    //   'PC',
-    //   'ED',
-    //   'OPD'
-    // ]),
     status: faker.helpers.arrayElement([
       'active',
       'inactive',
       'invited',
       'suspended',
     ]),
-    role: faker.helpers.arrayElement([
-      'superadmin',
-      'admin',
-      'cashier',
-      'manager',
+    department: faker.helpers.arrayElement([
+      'REVIEW',
+      'PC',
+      'ED',
+      'OPD'
     ]),
     createdAt: faker.date.past(),
     updatedAt: faker.date.recent(),

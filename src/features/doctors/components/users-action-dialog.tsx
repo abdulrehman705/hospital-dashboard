@@ -24,8 +24,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
-import { userTypes } from '../data/data'
 import { User } from '../data/schema'
+import { departments } from '@/features/hospitals/data/data'
 
 const formSchema = z
   .object({
@@ -38,7 +38,7 @@ const formSchema = z
       .min(1, { message: 'Email is required.' })
       .email({ message: 'Email is invalid.' }),
     password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, { message: 'Role is required.' }),
+    department: z.string().min(1, { message: 'Department is required.' }),
     confirmPassword: z.string().transform((pwd) => pwd.trim()),
     isEdit: z.boolean(),
   })
@@ -109,7 +109,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
         lastName: '',
         username: '',
         email: '',
-        role: '',
+        department: '',
         phoneNumber: '',
         password: '',
         confirmPassword: '',
@@ -247,18 +247,18 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
               />
               <FormField
                 control={form.control}
-                name='role'
+                name='department'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Role
+                      Department
                     </FormLabel>
                     <SelectDropdown
                       defaultValue={field.value}
                       onValueChange={field.onChange}
-                      placeholder='Select a role'
+                      placeholder='Select a department'
                       className='col-span-4'
-                      items={userTypes.map(({ label, value }) => ({
+                      items={departments.map(({ label, value }) => ({
                         label,
                         value,
                       }))}

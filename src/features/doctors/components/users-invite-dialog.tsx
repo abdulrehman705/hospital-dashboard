@@ -24,14 +24,14 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { SelectDropdown } from '@/components/select-dropdown'
-import { userTypes } from '../data/data'
+import { departments } from '@/features/hospitals/data/data'
 
 const formSchema = z.object({
   email: z
     .string()
     .min(1, { message: 'Email is required.' })
     .email({ message: 'Email is invalid.' }),
-  role: z.string().min(1, { message: 'Role is required.' }),
+  department: z.string().min(1, { message: 'Department is required.' }),
   desc: z.string().optional(),
 })
 type UserInviteForm = z.infer<typeof formSchema>
@@ -44,7 +44,7 @@ interface Props {
 export function UsersInviteDialog({ open, onOpenChange }: Props) {
   const form = useForm<UserInviteForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: '', role: '', desc: '' },
+    defaultValues: { email: '', department: '', desc: '' },
   })
 
   const onSubmit = (values: UserInviteForm) => {
@@ -96,15 +96,15 @@ export function UsersInviteDialog({ open, onOpenChange }: Props) {
             />
             <FormField
               control={form.control}
-              name='role'
+              name='department'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>Department</FormLabel>
                   <SelectDropdown
                     defaultValue={field.value}
                     onValueChange={field.onChange}
-                    placeholder='Select a role'
-                    items={userTypes.map(({ label, value }) => ({
+                    placeholder='Select a Department'
+                    items={departments.map(({ label, value }) => ({
                       label,
                       value,
                     }))}
