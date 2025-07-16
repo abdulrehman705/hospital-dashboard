@@ -1,5 +1,4 @@
 'use client'
-
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -24,7 +23,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
-import { User } from '../data/schema'
+import { Doctor } from '../data/schema'
 import { departments } from '../data/data'
 
 const formSchema = z
@@ -88,7 +87,7 @@ const formSchema = z
 type UserForm = z.infer<typeof formSchema>
 
 interface Props {
-  currentRow?: User
+  currentRow?: Doctor
   open: boolean
   onOpenChange: (open: boolean) => void
 }

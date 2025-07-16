@@ -7,12 +7,12 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { User } from '../data/schema'
+import { Doctor } from '../data/schema'
 
 interface Props {
   open: boolean
   onOpenChange: (open: boolean) => void
-  currentRow: User
+  currentRow: Doctor
 }
 
 export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
@@ -37,7 +37,7 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
             className='stroke-destructive mr-1 inline-block'
             size={18}
           />{' '}
-          Delete User
+          Delete Doctor
         </span>
       }
       desc={

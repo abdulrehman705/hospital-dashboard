@@ -22,6 +22,8 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { Task } from '../data/schema'
+import { supabase } from '@/api/api'
+import { useState } from 'react'
 
 interface Props {
   open: boolean
@@ -38,6 +40,10 @@ type TasksForm = z.infer<typeof formSchema>
 
 export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
   const isUpdate = !!currentRow
+  const [message, setMessage] = useState('')
+
+  console.log("message", message);
+
 
   const form = useForm<TasksForm>({
     resolver: zodResolver(formSchema),
@@ -48,11 +54,51 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
     },
   })
 
-  const onSubmit = (data: TasksForm) => {
+  const onSubmit = async (hospitalData: TasksForm) => {
     // do something with the form data
     onOpenChange(false)
     form.reset()
-    showSubmittedData(data)
+    showSubmittedData(hospitalData)
+
+    try {
+      if (isUpdate) {
+        const { data, error } = await supabase
+          .from('hospitals')
+          .update(hospitalData)
+          .eq('id', currentRow?.id)
+          .select()
+        if (data) {
+          console.log('Hospital added:', data);
+        }
+
+        if (error) {
+          setMessage(`Error: ${error.message}`)
+        } else {
+          setMessage('Hospital added successfully!')
+          form.reset()
+        }
+      } else {
+        const { data, error } = await supabase
+          .from('hospitals')
+          .insert([hospitalData])
+          .select()
+
+        if (data) {
+          console.log('Hospital added:', data);
+
+        }
+
+        if (error) {
+          setMessage(`Error: ${error.message}`)
+        } else {
+          setMessage('Hospital added successfully!')
+          form.reset()
+        }
+      }
+    } catch (err: any) {
+      setMessage(`Error: ${err.message}`)
+    }
+
   }
 
   return (

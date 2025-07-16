@@ -1,4 +1,4 @@
-# Shadcn Admin Dashboard
+# Nurmed Admin Dashboard
 
 Admin Dashboard UI crafted with Shadcn and Vite. Built with responsiveness and accessibility in mind.
 
@@ -77,4 +77,5 @@ Crafted with 🤍 by [@satnaing](https://github.com/satnaing)
 ## License
 
 Licensed under the [MIT License](https://choosealicense.com/licenses/mit/)
+
 # hospital-dashboard
