@@ -1,3 +1,4 @@
+'use client'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { columns } from './components/columns'
@@ -5,10 +6,28 @@ import { DataTable } from './components/data-table'
 import { TasksDialogs } from './components/tasks-dialogs'
 import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import TasksProvider from './context/tasks-context'
-import { hospitals } from './data/hospitals'
 import LogoutLogo from '@/assets/logout.svg'
+import { getHospitals } from '@/supabase/api/api'
+import { useEffect, useState } from 'react';
+
 
 export default function Hospitals() {
+
+  const [hospitalsData, setHospitalsData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchHospitals = async () => {
+      try {
+        const data = await getHospitals();
+        console.log("Fetched hospitals:", data);
+        setHospitalsData(data);
+      } catch (error) {
+        console.error("Error fetching hospitals:", error);
+      }
+    };
+    fetchHospitals();
+  }, []);
+
   return (
     <TasksProvider>
       <Header>
@@ -33,7 +52,7 @@ export default function Hospitals() {
           <TasksPrimaryButtons />
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-          <DataTable data={hospitals} columns={columns} />
+          <DataTable data={hospitalsData} columns={columns} />
         </div>
       </Main>
 

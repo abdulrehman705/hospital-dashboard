@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/utils/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -22,8 +21,8 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { Task } from '../data/schema'
-import { supabase } from '@/api/api'
 import { useState } from 'react'
+import { addHospital, updateHospital } from '@/supabase/api/api'
 
 interface Props {
   open: boolean
@@ -32,18 +31,18 @@ interface Props {
 }
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Title is required.'),
+  name: z.string().min(1, 'Hospital Name is required.'),
   phone: z.string().min(1, 'Phone Number is required.'),
-  email: z.string().min(1, 'Phone Number is required.').email('Email is Invalid'),
+  email: z.string().min(1, 'Email is required.').email('Email is Invalid'),
 })
-type TasksForm = z.infer<typeof formSchema>
+export type TasksForm = z.infer<typeof formSchema>
 
 export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
   const isUpdate = !!currentRow
   const [message, setMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   console.log("message", message);
-
 
   const form = useForm<TasksForm>({
     resolver: zodResolver(formSchema),
@@ -55,50 +54,30 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
   })
 
   const onSubmit = async (hospitalData: TasksForm) => {
-    // do something with the form data
-    onOpenChange(false)
-    form.reset()
-    showSubmittedData(hospitalData)
+    setIsSubmitting(true)
+    setMessage('')
 
     try {
-      if (isUpdate) {
-        const { data, error } = await supabase
-          .from('hospitals')
-          .update(hospitalData)
-          .eq('id', currentRow?.id)
-          .select()
-        if (data) {
-          console.log('Hospital added:', data);
-        }
-
-        if (error) {
-          setMessage(`Error: ${error.message}`)
-        } else {
-          setMessage('Hospital added successfully!')
-          form.reset()
-        }
+      if (isUpdate && currentRow?.id) {
+        const updatedHospital = await updateHospital({
+          id: currentRow.id,
+          ...hospitalData
+        })
+        console.log('Hospital updated:', updatedHospital)
+        setMessage('Hospital updated successfully!')
       } else {
-        const { data, error } = await supabase
-          .from('hospitals')
-          .insert([hospitalData])
-          .select()
-
-        if (data) {
-          console.log('Hospital added:', data);
-
-        }
-
-        if (error) {
-          setMessage(`Error: ${error.message}`)
-        } else {
-          setMessage('Hospital added successfully!')
-          form.reset()
-        }
+        const newHospital = await addHospital(hospitalData)
+        console.log('Hospital added:', newHospital)
+        setMessage('Hospital added successfully!')
       }
-    } catch (err: any) {
-      setMessage(`Error: ${err.message}`)
-    }
 
+      form.reset()
+      onOpenChange(false)
+    } catch (error: any) {
+      setMessage(error.message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -107,6 +86,7 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
       onOpenChange={(v) => {
         onOpenChange(v)
         form.reset()
+        setMessage('')
       }}
     >
       <SheetContent className='flex flex-col'>
@@ -119,6 +99,16 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
             Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
+
+        {message && (
+          <div className={`px-4 py-2 rounded ${message.includes('Error') || message.includes('failed')
+            ? 'bg-red-100 text-red-700 border border-red-200'
+            : 'bg-green-100 text-green-700 border border-green-200'
+            }`}>
+            {message}
+          </div>
+        )}
+
         <Form {...form}>
           <form
             id='hospital-form'
@@ -130,7 +120,7 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
               name='name'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Hospital Name</FormLabel>
                   <FormControl>
                     <Input {...field} placeholder='Enter hospital Name' />
                   </FormControl>
@@ -156,7 +146,7 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
               name='email'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>email</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input {...field} placeholder='Enter hospital email' type='email' />
                   </FormControl>
@@ -168,10 +158,10 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
         </Form>
         <SheetFooter className='gap-2'>
           <SheetClose asChild>
-            <Button variant='outline'>Close</Button>
+            <Button variant='outline' disabled={isSubmitting}>Close</Button>
           </SheetClose>
-          <Button form='hospital-form' type='submit'>
-            Save changes
+          <Button form='hospital-form' type='submit' disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : 'Save changes'}
           </Button>
         </SheetFooter>
       </SheetContent>
