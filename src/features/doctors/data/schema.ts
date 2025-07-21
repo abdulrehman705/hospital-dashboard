@@ -27,6 +27,7 @@ const doctorSchema = z.object({
   status: userStatusSchema,
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  hospitalId: z.string(),
 })
 export type Doctor = z.infer<typeof doctorSchema>
 

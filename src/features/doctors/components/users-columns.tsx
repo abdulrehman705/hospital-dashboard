@@ -7,6 +7,7 @@ import { callTypes, departments } from '../data/data'
 import { Doctor } from '../data/schema'
 import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
+import { hospitals } from '@/features/hospitals/data/hospitals'
 
 export const columns: ColumnDef<Doctor>[] = [
   {
@@ -123,6 +124,33 @@ export const columns: ColumnDef<Doctor>[] = [
       return (
         <div className='flex items-center gap-x-2'>
           <span className='text-sm capitalize'>{userType.label}</span>
+        </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: 'hospitalId',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Hospital' />
+    ),
+    cell: ({ row }) => {
+      const { hospitalId } = row.original
+      const userType = hospitals.find(({ id }) => id === hospitalId)
+
+      console.log("userType", userType);
+
+      if (!userType) {
+        return null
+      }
+
+      return (
+        <div className='flex items-center gap-x-2'>
+          <span className='text-sm capitalize'>{userType.name}</span>
         </div>
       )
     },

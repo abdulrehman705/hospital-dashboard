@@ -1,3 +1,4 @@
+import { hospitals } from '@/features/hospitals/data/hospitals'
 import { faker } from '@faker-js/faker'
 
 export const doctors = Array.from({ length: 20 }, () => {
@@ -26,5 +27,6 @@ export const doctors = Array.from({ length: 20 }, () => {
     ]),
     createdAt: faker.date.past(),
     updatedAt: faker.date.recent(),
+    hospitalId: faker.helpers.arrayElement(hospitals).id,
   }
 })

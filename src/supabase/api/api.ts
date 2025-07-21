@@ -10,6 +10,22 @@ interface UpdateHospitalPayload extends AddHospitalPayload {
     id: number;
 }
 
+interface AddDoctorPayload {
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    phoneNumber: string;
+    hospitalId: string;
+    department: string;
+    status: string;
+}
+
+interface UpdateDoctorPayload extends AddDoctorPayload {
+    id: number;
+}
+
+
 const login = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -59,4 +75,43 @@ const updateHospital = async (hospital: UpdateHospitalPayload) => {
     return data;
 };
 
-export { addHospital, updateHospital, getHospitals, login };
+const getDoctors = async () => {
+    const { data, error } = await supabase
+        .from('doctor')
+        .select('*');
+    if (error) {
+        throw new Error(`Get doctors failed: ${error.message}`);
+    }
+    return data;
+};
+
+// add doctor
+const addDoctor = async (doctor: AddDoctorPayload) => {
+    const { data, error } = await supabase
+        .from('doctor')
+        .insert([doctor])
+        .select()
+        .single();
+
+    if (error) {
+        throw new Error(`Add doctor failed: ${error.message}`);
+    }
+    return data;
+};
+
+const updateDoctor = async (doctor: UpdateDoctorPayload) => {
+    const { id, ...updateData } = doctor;
+    const { data, error } = await supabase
+        .from('doctor')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
+
+    if (error) {
+        throw new Error(`Update doctor failed: ${error.message}`);
+    }
+    return data;
+};
+
+export { addHospital, updateHospital, getHospitals, login, getDoctors, addDoctor, updateDoctor };
