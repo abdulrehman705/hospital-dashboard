@@ -28,9 +28,9 @@ import { hospitals } from '@/features/hospitals/data/hospitals'
 
 const formSchema = z
   .object({
-    firstName: z.string().min(1, { message: 'First Name is required.' }),
-    lastName: z.string().min(1, { message: 'Last Name is required.' }),
-    username: z.string().min(1, { message: 'Username is required.' }),
+    first_name: z.string().min(1, { message: 'First Name is required.' }),
+    last_name: z.string().min(1, { message: 'Last Name is required.' }),
+    sur_name: z.string().min(1, { message: 'Sur Name is required.' }),
     phoneNumber: z.string().min(1, { message: 'Phone number is required.' }),
     email: z
       .string()
@@ -69,9 +69,9 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
         isEdit,
       }
       : {
-        firstName: '',
-        lastName: '',
-        username: '',
+        first_name: '',
+        last_name: '',
+        sur_name: '',
         email: '',
         department: '',
         phoneNumber: '',
@@ -111,7 +111,26 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
             >
               <FormField
                 control={form.control}
-                name='firstName'
+                name='sur_name'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-right'>
+                      Sur Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='DR.'
+                        className='col-span-4'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='first_name'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
@@ -131,7 +150,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
               />
               <FormField
                 control={form.control}
-                name='lastName'
+                name='last_name'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
@@ -142,25 +161,6 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                         placeholder='Doe'
                         className='col-span-4'
                         autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='username'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Username
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john_doe'
-                        className='col-span-4'
                         {...field}
                       />
                     </FormControl>
@@ -218,7 +218,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                       placeholder='Select a department'
-                      className='col-span-4'
+                      className='col-span-4 w-full'
                       items={departments.map(({ label, value }) => ({
                         label,
                         value,
@@ -240,7 +240,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                       placeholder='Select a hospital'
-                      className='col-span-4'
+                      className='col-span-4 w-full'
                       items={hospitals.map(({ name, id }) => ({
                         label: name,
                         value: id.toString(),
