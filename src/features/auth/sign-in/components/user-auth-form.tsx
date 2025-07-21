@@ -16,7 +16,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 import { useAuth } from '@/context/useAuth'
-import AppLogo from '@/assets/logo.png'
 
 type UserAuthFormProps = HTMLAttributes<HTMLFormElement>
 
