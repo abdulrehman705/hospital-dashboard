@@ -7,7 +7,7 @@ import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import TasksProvider from './context/tasks-context'
 import { getHospitals } from '@/supabase/api/api'
 import { useEffect, useState } from 'react';
-import { HeaderComponent } from '@/components/header';
+import { Header } from '@/components/layout/header'
 
 
 export default function Hospitals() {
@@ -29,7 +29,7 @@ export default function Hospitals() {
 
   return (
     <TasksProvider>
-      <HeaderComponent />
+      <Header />
 
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>

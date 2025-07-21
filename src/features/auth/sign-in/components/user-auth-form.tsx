@@ -39,7 +39,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [error, setError] = useState<string>("")
   const router = useRouter()
 
-  const { login, session, getTokenExpiry } = useAuth();
+  const { login, getTokenExpiry } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,11 +50,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   })
 
 
-  useEffect(() => {
-    if (session?.user) {
-      router.navigate({ to: '/' });
-    }
-  }, [session, router]);
+  // useEffect(() => {
+  //   if (session?.user) {
+  //     router.navigate({ to: '/' });
+  //   }
+  // }, [session, router]);
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setError("");

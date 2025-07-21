@@ -4,11 +4,9 @@ import { UsersDialogs } from './components/users-dialogs'
 import { UsersPrimaryButtons } from './components/users-primary-buttons'
 import { UsersTable } from './components/users-table'
 import UsersProvider from './context/users-context'
-// import { doctorListSchema } from './data/schema'
-// import { doctors } from './data/users'
-import { HeaderComponent } from '@/components/header';
 import { useState, useEffect } from 'react'
 import { getDoctors } from '@/supabase/api/api'
+import { Header } from '@/components/layout/header'
 
 export default function Doctors() {
   // Parse user list
@@ -31,7 +29,7 @@ export default function Doctors() {
 
   return (
     <UsersProvider>
-      <HeaderComponent />
+      <Header />
 
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>

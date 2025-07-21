@@ -1,7 +1,9 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
-import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
+import Cookies from 'js-cookie'
+import { useRouter } from '@tanstack/react-router'
+import LogoutLogo from '@/assets/logout.svg'
 
 interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
   fixed?: boolean
@@ -15,6 +17,13 @@ export const Header = ({
   ...props
 }: HeaderProps) => {
   const [offset, setOffset] = React.useState(0)
+  const router = useRouter();
+
+  // LogoutButton implementation
+  const handleLogout = () => {
+    Cookies.remove('access_token');
+    router.navigate({ to: '/sign-in' });
+  };
 
   React.useEffect(() => {
     const onScroll = () => {
@@ -39,8 +48,16 @@ export const Header = ({
       {...props}
     >
       <SidebarTrigger variant='outline' className='scale-125 sm:scale-100' />
-      <Separator orientation='vertical' className='h-6' />
       {children}
+      <div className='ml-auto'>
+        <div className='ml-auto flex items-center space-x-4'>
+          <button className="text-gray-600 transition-colors duration-200 hover:text-gray-900"
+            onClick={handleLogout}
+          >
+            <img src={LogoutLogo} alt="Logout" className="h-6 px-6" />
+          </button>
+        </div>
+      </div>
     </header>
   )
 }

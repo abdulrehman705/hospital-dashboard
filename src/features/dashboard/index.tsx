@@ -12,9 +12,9 @@ import {
 import { Main } from '@/components/layout/main'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
-import { HeaderComponent } from '@/components/header'
 import { getHospitals, getDoctors, getDoctorSessions } from '@/supabase/api/api';
 import { useState, useEffect } from 'react';
+import { Header } from '@/components/layout/header'
 
 export default function Dashboard() {
   const [hospitals, setHospitals] = useState<any[]>([]);
@@ -29,8 +29,7 @@ export default function Dashboard() {
   return (
     <>
       {/* ===== Top Heading ===== */}
-      <HeaderComponent />
-
+      <Header />
       {/* ===== Main ===== */}
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
