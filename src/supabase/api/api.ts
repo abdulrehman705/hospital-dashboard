@@ -114,4 +114,12 @@ const updateDoctor = async (doctor: UpdateDoctorPayload) => {
     return data;
 };
 
-export { addHospital, updateHospital, getHospitals, login, getDoctors, addDoctor, updateDoctor };
+export {
+    addHospital,
+    updateHospital,
+    getHospitals,
+    login,
+    getDoctors,
+    addDoctor,
+    updateDoctor
+};
