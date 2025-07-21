@@ -1,9 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import LongText from '@/components/long-text'
-import { callTypes, departments } from '../data/data'
+import { departments } from '../data/data'
 import { Doctor } from '../data/schema'
 import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
@@ -41,12 +40,12 @@ export const columns: ColumnDef<Doctor>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'username',
+    accessorKey: 'sur_name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Username' />
+      <DataTableColumnHeader column={column} title='Sur Name' />
     ),
     cell: ({ row }) => (
-      <LongText className='max-w-26'>{row.getValue('username')}</LongText>
+      <LongText className='max-w-26'>{row.getValue('sur_name') ?? '-'}</LongText>
     ),
     meta: {
       className: cn(
@@ -58,14 +57,14 @@ export const columns: ColumnDef<Doctor>[] = [
     enableHiding: false,
   },
   {
-    id: 'fullName',
+    id: 'full_name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Name' />
+      <DataTableColumnHeader column={column} title='Full Name' />
     ),
     cell: ({ row }) => {
-      const { firstName, lastName } = row.original
-      const fullName = `${firstName} ${lastName}`
-      return <LongText className='max-w-36'>{fullName}</LongText>
+      const { first_name, last_name } = row.original
+      const full_name = `${first_name} ${last_name}`
+      return <LongText className='max-w-36'>{full_name ?? '-'}</LongText>
     },
     meta: { className: 'w-36' },
   },
@@ -75,37 +74,23 @@ export const columns: ColumnDef<Doctor>[] = [
       <DataTableColumnHeader column={column} title='Email' />
     ),
     cell: ({ row }) => (
-      <div className='w-fit text-nowrap'>{row.getValue('email')}</div>
+      <div className='w-fit text-nowrap'>{row.getValue('email') ?? '-'}</div>
     ),
   },
   {
-    accessorKey: 'phoneNumber',
+    accessorKey: 'phone_number',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Phone Number' />
     ),
-    cell: ({ row }) => <div>{row.getValue('phoneNumber')}</div>,
+    cell: ({ row }) => <div>{row.getValue('phone_number') ?? '-'}</div>,
     enableSorting: false,
   },
   {
-    accessorKey: 'status',
+    accessorKey: 'registration_number',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
+      <DataTableColumnHeader column={column} title='Registration Number' />
     ),
-    cell: ({ row }) => {
-      const { status } = row.original
-      const badgeColor = callTypes.get(status)
-      return (
-        <div className='flex space-x-2'>
-          <Badge variant='outline' className={cn('capitalize', badgeColor)}>
-            {row.getValue('status')}
-          </Badge>
-        </div>
-      )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
-    enableHiding: false,
+    cell: ({ row }) => <div>{row.getValue('registration_number') ?? '-'}</div>,
     enableSorting: false,
   },
   {
@@ -123,7 +108,7 @@ export const columns: ColumnDef<Doctor>[] = [
 
       return (
         <div className='flex items-center gap-x-2'>
-          <span className='text-sm capitalize'>{userType.label}</span>
+          <span className='text-sm capitalize'>{userType.label ?? '-'}</span>
         </div>
       )
     },
@@ -134,13 +119,13 @@ export const columns: ColumnDef<Doctor>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'hospitalId',
+    accessorKey: 'hospital_id',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Hospital' />
     ),
     cell: ({ row }) => {
-      const { hospitalId } = row.original
-      const userType = hospitals.find(({ id }) => id === hospitalId)
+      const { hospital_id } = row.original
+      const userType = hospitals.find(({ id }) => id === hospital_id)
 
       console.log("userType", userType);
 
@@ -150,7 +135,7 @@ export const columns: ColumnDef<Doctor>[] = [
 
       return (
         <div className='flex items-center gap-x-2'>
-          <span className='text-sm capitalize'>{userType.name}</span>
+          <span className='text-sm capitalize'>{userType.name ?? '-'}</span>
         </div>
       )
     },

@@ -3,7 +3,11 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useTasks } from '../context/tasks-context'
 import { TasksMutateDrawer } from './tasks-mutate-drawer'
 
-export function TasksDialogs() {
+interface TasksDialogsProps {
+  onSuccess?: () => void;
+}
+
+export function TasksDialogs({ onSuccess }: TasksDialogsProps) {
   const { open, setOpen, currentRow, setCurrentRow } = useTasks()
   return (
     <>
@@ -11,6 +15,7 @@ export function TasksDialogs() {
         key='add-hospital'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
+        onSuccess={onSuccess}
       />
 
       {currentRow && (
@@ -25,6 +30,7 @@ export function TasksDialogs() {
               }, 500)
             }}
             currentRow={currentRow}
+            onSuccess={onSuccess}
           />
 
           <ConfirmDialog
@@ -57,6 +63,7 @@ export function TasksDialogs() {
               </>
             }
             confirmText='Delete'
+          // onSuccess={onSuccess}
           />
         </>
       )}

@@ -2,7 +2,6 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/utils/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -24,29 +23,31 @@ import { Input } from '@/components/ui/input'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { Doctor } from '../data/schema'
 import { departments } from '../data/data'
-import { hospitals } from '@/features/hospitals/data/hospitals'
+import { addDoctor, updateDoctor, getHospitals } from '@/supabase/api/api'
+import { useState, useEffect } from 'react'
 
 const formSchema = z
   .object({
     first_name: z.string().min(1, { message: 'First Name is required.' }),
     last_name: z.string().min(1, { message: 'Last Name is required.' }),
     sur_name: z.string().min(1, { message: 'Sur Name is required.' }),
-    phoneNumber: z.string().min(1, { message: 'Phone number is required.' }),
+    phone_number: z.string().min(1, { message: 'Phone number is required.' }).optional().nullable(),
     email: z
       .string()
       .min(1, { message: 'Email is required.' })
       .email({ message: 'Email is invalid.' }),
-    department: z.string().min(1, { message: 'Department is required.' }),
-    hospitalId: z.string().min(1, { message: 'Hospital is required.' }),
+    department: z.string().min(1, { message: 'Department is required.' }).optional().nullable(),
+    hospital_id: z.string().min(1, { message: 'Hospital is required.' }).optional().nullable(),
+    registration_number: z.string().min(1, { message: 'Registration number is required.' }).optional().nullable(),
     isEdit: z.boolean(),
   })
-  .superRefine(({ isEdit, hospitalId }, ctx) => {
-    if (!isEdit || (isEdit && hospitalId !== '')) {
-      if (hospitalId === '') {
+  .superRefine(({ isEdit, hospital_id }, ctx) => {
+    if (!isEdit || (isEdit && hospital_id !== '')) {
+      if (hospital_id === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Hospital is required.',
-          path: ['hospitalId'],
+          path: ['hospital_id'],
         })
       }
     }
@@ -57,34 +58,110 @@ interface Props {
   currentRow?: Doctor
   open: boolean
   onOpenChange: (open: boolean) => void
+  onSuccess?: () => void
 }
 
-export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
-  const isEdit = !!currentRow
-  const form = useForm<UserForm>({
-    resolver: zodResolver(formSchema),
-    defaultValues: isEdit
-      ? {
-        ...currentRow,
+export function UsersActionDialog({ currentRow, open, onOpenChange, onSuccess }: Props) {
+  const isEdit = !!currentRow;
+  const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hospitals, setHospitals] = useState<{ id: string | number, name: string }[]>([]);
+
+  useEffect(() => {
+    if (open) {
+      getHospitals().then((data) => {
+        if (Array.isArray(data)) {
+          setHospitals(data.map(h => ({ id: h.id, name: h.name })));
+        }
+      });
+    }
+  }, [open]);
+
+  console.log("message", message);
+
+  // Map currentRow to form fields, ensuring no undefined/null for required fields
+  const getDefaultValues = () => {
+    if (isEdit && currentRow) {
+      return {
+        first_name: currentRow.first_name || '',
+        last_name: currentRow.last_name || '',
+        sur_name: currentRow.sur_name || '',
+        email: currentRow.email || '',
+        phone_number: currentRow.phone_number ?? '',
+        department: currentRow.department ?? '',
+        hospital_id: currentRow.hospital_id ?? '',
+        registration_number: currentRow.registration_number ?? '',
         isEdit,
-      }
-      : {
+      };
+    } else {
+      return {
         first_name: '',
         last_name: '',
         sur_name: '',
         email: '',
+        phone_number: '',
         department: '',
-        phoneNumber: '',
-        hospitalId: '',
+        hospital_id: '',
+        registration_number: '',
         isEdit,
-      },
-  })
+      };
+    }
+  };
 
-  const onSubmit = (values: UserForm) => {
-    form.reset()
-    showSubmittedData(values)
-    onOpenChange(false)
-  }
+  const form = useForm<UserForm>({
+    resolver: zodResolver(formSchema),
+    defaultValues: getDefaultValues(),
+  });
+
+  const onSubmit = async (values: UserForm) => {
+    setIsSubmitting(true);
+    setMessage('');
+    try {
+      if (isEdit && currentRow?.id) {
+        // Map form values to API payload (convert id to number if needed)
+        const updatedDoctor = await updateDoctor({
+          id: typeof currentRow.id === 'string' ? parseInt(currentRow.id, 10) : currentRow.id,
+          first_name: values.first_name,
+          last_name: values.last_name,
+          sur_name: values.sur_name,
+          email: values.email,
+          phone_number: values.phone_number || '',
+          department: values.department || '',
+          hospital_id: values.hospital_id ? Number(values.hospital_id) : 1,
+          registration_number: values.registration_number || '',
+        });
+        if (onSuccess) {
+          onSuccess();
+        }
+        console.log('Doctor updated:', updatedDoctor);
+        setMessage('Doctor updated successfully!');
+      } else {
+        // Map form values to API payload
+        const newDoctor = await addDoctor({
+          first_name: values.first_name,
+          last_name: values.last_name,
+          sur_name: values.sur_name,
+          email: values.email,
+          phone_number: values.phone_number || '',
+          department: values.department || '',
+          hospital_id: values.hospital_id ? Number(values.hospital_id) : 1,
+          registration_number: values.registration_number || '',
+        });
+        console.log('Doctor added:', newDoctor);
+        setMessage('Doctor added successfully!');
+        if (onSuccess) {
+          onSuccess();
+        }
+      }
+      form.reset(getDefaultValues());
+      onOpenChange(false);
+    } catch (error: any) {
+      setMessage(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
 
   return (
     <Dialog
@@ -189,7 +266,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
               />
               <FormField
                 control={form.control}
-                name='phoneNumber'
+                name='phone_number'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
@@ -200,6 +277,27 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                         placeholder='+123456789'
                         className='col-span-4'
                         {...field}
+                        value={field.value ?? ''}
+                      />
+                    </FormControl>
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='registration_number'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                    <FormLabel className='col-span-2 text-right'>
+                      Registration Number
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='123456789'
+                        className='col-span-4'
+                        {...field}
+                        value={field.value ?? ''}
                       />
                     </FormControl>
                     <FormMessage className='col-span-4 col-start-3' />
@@ -215,7 +313,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
                       Department
                     </FormLabel>
                     <SelectDropdown
-                      defaultValue={field.value}
+                      defaultValue={field.value ?? ''}
                       onValueChange={field.onChange}
                       placeholder='Select a department'
                       className='col-span-4 w-full'
@@ -230,14 +328,14 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
               />
               <FormField
                 control={form.control}
-                name='hospitalId'
+                name='hospital_id'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
                       Hospital
                     </FormLabel>
                     <SelectDropdown
-                      defaultValue={field.value}
+                      defaultValue={field.value ?? ''}
                       onValueChange={field.onChange}
                       placeholder='Select a hospital'
                       className='col-span-4 w-full'
@@ -254,7 +352,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
           </Form>
         </div>
         <DialogFooter>
-          <Button type='submit' form='doctor-form'>
+          <Button type='submit' form='doctor-form' disabled={isSubmitting}  >
             Save changes
           </Button>
         </DialogFooter>

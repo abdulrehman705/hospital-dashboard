@@ -13,16 +13,17 @@ import { HeaderComponent } from '@/components/header';
 export default function Hospitals() {
   const [hospitalsData, setHospitalsData] = useState<any[]>([]);
 
+  const fetchHospitals = async () => {
+    try {
+      const data = await getHospitals();
+      console.log("Fetched hospitals:", data);
+      setHospitalsData(data);
+    } catch (error) {
+      console.error("Error fetching hospitals:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchHospitals = async () => {
-      try {
-        const data = await getHospitals();
-        console.log("Fetched hospitals:", data);
-        setHospitalsData(data);
-      } catch (error) {
-        console.error("Error fetching hospitals:", error);
-      }
-    };
     fetchHospitals();
   }, []);
 
@@ -44,8 +45,7 @@ export default function Hospitals() {
           <DataTable data={hospitalsData} columns={columns} />
         </div>
       </Main>
-
-      <TasksDialogs />
+      <TasksDialogs onSuccess={fetchHospitals} />
     </TasksProvider>
   )
 }

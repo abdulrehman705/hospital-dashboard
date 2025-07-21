@@ -11,14 +11,14 @@ interface UpdateHospitalPayload extends AddHospitalPayload {
 }
 
 interface AddDoctorPayload {
-    firstName: string;
-    lastName: string;
-    username: string;
+    first_name: string;
+    last_name: string;
+    sur_name: string;
     email: string;
-    phoneNumber: string;
-    hospitalId: string;
+    phone_number: string;
+    hospital_id: number | null;
     department: string;
-    status: string;
+    registration_number: string;
 }
 
 interface UpdateDoctorPayload extends AddDoctorPayload {

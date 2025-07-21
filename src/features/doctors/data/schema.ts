@@ -5,7 +5,7 @@ const userStatusSchema = z.union([
   z.literal('inactive'),
   z.literal('invited'),
   z.literal('suspended'),
-])
+]).optional()
 
 export type UserStatus = z.infer<typeof userStatusSchema>
 
@@ -14,20 +14,21 @@ const doctorDepartmentSchema = z.union([
   z.literal('REVIEW'),
   z.literal('OPD'),
   z.literal('ED'),
-])
+]).optional()
 
 const doctorSchema = z.object({
   id: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
-  username: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
+  sur_name: z.string(),
   email: z.string(),
-  phoneNumber: z.string(),
+  phone_number: z.string().nullable().optional(),
   department: doctorDepartmentSchema,
   status: userStatusSchema,
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  hospitalId: z.string(),
+  hospital_id: z.string().nullable().optional(),
+  registration_number: z.string().nullable().optional(),
 })
 export type Doctor = z.infer<typeof doctorSchema>
 

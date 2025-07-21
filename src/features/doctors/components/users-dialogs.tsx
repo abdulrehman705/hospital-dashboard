@@ -1,9 +1,12 @@
 import { useUsers } from '../context/users-context'
 import { UsersActionDialog } from './users-action-dialog'
 import { UsersDeleteDialog } from './users-delete-dialog'
-import { UsersInviteDialog } from './users-invite-dialog'
 
-export function UsersDialogs() {
+interface UsersDialogsProps {
+  onSuccess?: () => void;
+}
+
+export function UsersDialogs({ onSuccess }: UsersDialogsProps) {
   const { open, setOpen, currentRow, setCurrentRow } = useUsers()
   return (
     <>
@@ -11,12 +14,7 @@ export function UsersDialogs() {
         key='user-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
-      />
-
-      <UsersInviteDialog
-        key='user-invite'
-        open={open === 'invite'}
-        onOpenChange={() => setOpen('invite')}
+        onSuccess={onSuccess}
       />
 
       {currentRow && (
@@ -31,6 +29,7 @@ export function UsersDialogs() {
               }, 500)
             }}
             currentRow={currentRow}
+            onSuccess={onSuccess}
           />
 
           <UsersDeleteDialog

@@ -28,6 +28,7 @@ interface Props {
   open: boolean
   onOpenChange: (open: boolean) => void
   currentRow?: Task
+  onSuccess?: () => void
 }
 
 const formSchema = z.object({
@@ -37,7 +38,7 @@ const formSchema = z.object({
 })
 export type TasksForm = z.infer<typeof formSchema>
 
-export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
+export function TasksMutateDrawer({ open, onOpenChange, currentRow, onSuccess }: Props) {
   const isUpdate = !!currentRow
   const [message, setMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -65,10 +66,16 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
         })
         console.log('Hospital updated:', updatedHospital)
         setMessage('Hospital updated successfully!')
+        if (onSuccess) {
+          onSuccess();
+        }
       } else {
         const newHospital = await addHospital(hospitalData)
         console.log('Hospital added:', newHospital)
         setMessage('Hospital added successfully!')
+        if (onSuccess) {
+          onSuccess();
+        }
       }
 
       form.reset()
