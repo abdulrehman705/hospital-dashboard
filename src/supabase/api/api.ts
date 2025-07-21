@@ -2,8 +2,8 @@ import { supabase } from "../client";
 
 interface AddHospitalPayload {
     name: string;
-    phone: string;
-    email: string;
+    phone: string | null;
+    email: string | null;
 }
 
 interface UpdateHospitalPayload extends AddHospitalPayload {
@@ -23,7 +23,7 @@ const login = async (email: string, password: string) => {
 
 const getHospitals = async () => {
     const { data, error } = await supabase
-        .from('hospitals')
+        .from('hospital')
         .select('*');
     if (error) {
         throw new Error(`Get hospitals failed: ${error.message}`);
@@ -33,7 +33,7 @@ const getHospitals = async () => {
 
 const addHospital = async (hospital: AddHospitalPayload) => {
     const { data, error } = await supabase
-        .from('hospitals')
+        .from('hospital')
         .insert([hospital])
         .select()
         .single();
@@ -47,7 +47,7 @@ const addHospital = async (hospital: AddHospitalPayload) => {
 const updateHospital = async (hospital: UpdateHospitalPayload) => {
     const { id, ...updateData } = hospital;
     const { data, error } = await supabase
-        .from('hospitals')
+        .from('hospital')
         .update(updateData)
         .eq('id', id)
         .select()

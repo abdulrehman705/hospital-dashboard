@@ -15,7 +15,8 @@ import { ThemeProvider } from './context/theme-context'
 import './index.css'
 // Generated Routes
 import { routeTree } from './routeTree.gen'
-import { AuthProvider } from './context/AuthContext'
+import { store } from './context/store'
+import { Provider } from 'react-redux'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -89,15 +90,15 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme='light' storageKey='vite-ui-theme'>
-          <FontProvider>
-            <AuthProvider>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider defaultTheme='light' storageKey='vite-ui-theme'>
+            <FontProvider>
               <RouterProvider router={router} />
-            </AuthProvider>
-          </FontProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
+            </FontProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </Provider>
     </StrictMode>
   )
 }

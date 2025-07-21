@@ -95,10 +95,13 @@ export function DataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {cell.column && cell.column.columnDef && cell.column.columnDef.cell
+                        ? flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
+                        : <span className="text-muted-foreground italic">N/A</span>
+                      }
                     </TableCell>
                   ))}
                 </TableRow>

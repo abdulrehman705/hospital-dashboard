@@ -32,8 +32,8 @@ interface Props {
 
 const formSchema = z.object({
   name: z.string().min(1, 'Hospital Name is required.'),
-  phone: z.string().min(1, 'Phone Number is required.'),
-  email: z.string().min(1, 'Email is required.').email('Email is Invalid'),
+  phone: z.string().min(1, 'Phone Number is required.').nullable(),
+  email: z.string().min(1, 'Email is required.').email('Email is Invalid').nullable(),
 })
 export type TasksForm = z.infer<typeof formSchema>
 
@@ -135,7 +135,11 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
                 <FormItem className='space-y-1'>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder='Enter hospital phone number' />
+                    <Input
+                      {...field}
+                      placeholder='Enter hospital phone number'
+                      value={field.value ?? ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -148,7 +152,12 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
                 <FormItem className='space-y-1'>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder='Enter hospital email' type='email' />
+                    <Input
+                      {...field}
+                      placeholder='Enter hospital email'
+                      type='email'
+                      value={field.value ?? ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

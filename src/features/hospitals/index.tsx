@@ -1,18 +1,16 @@
 'use client'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { columns } from './components/columns'
 import { DataTable } from './components/data-table'
 import { TasksDialogs } from './components/tasks-dialogs'
 import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import TasksProvider from './context/tasks-context'
-import LogoutLogo from '@/assets/logout.svg'
 import { getHospitals } from '@/supabase/api/api'
 import { useEffect, useState } from 'react';
+import { HeaderComponent } from '@/components/header';
 
 
 export default function Hospitals() {
-
   const [hospitalsData, setHospitalsData] = useState<any[]>([]);
 
   useEffect(() => {
@@ -30,16 +28,7 @@ export default function Hospitals() {
 
   return (
     <TasksProvider>
-      <Header>
-        <div className='ml-auto flex items-center space-x-4'>
-          <button
-            className="text-gray-600 transition-colors duration-200 hover:text-gray-900"
-          >
-            <img src={LogoutLogo} alt="Logout" className="h-6 px-6" />
-          </button>
-
-        </div>
-      </Header>
+      <HeaderComponent />
 
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>

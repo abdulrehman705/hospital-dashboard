@@ -1,7 +1,6 @@
 import { showSubmittedData } from '@/utils/show-submitted-data'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useTasks } from '../context/tasks-context'
-// import { TasksImportDialog } from './tasks-import-dialog'
 import { TasksMutateDrawer } from './tasks-mutate-drawer'
 
 export function TasksDialogs() {
@@ -13,12 +12,6 @@ export function TasksDialogs() {
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
       />
-
-      {/* <TasksImportDialog
-        key='tasks-import'
-        open={open === 'import'}
-        onOpenChange={() => setOpen('import')}
-      /> */}
 
       {currentRow && (
         <>

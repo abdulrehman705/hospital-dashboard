@@ -1,4 +1,4 @@
-// import { Button } from '@/components/ui/button'
+
 import {
   Card,
   CardContent,
@@ -9,26 +9,16 @@ import {
 import {
   Tabs, TabsContent,
 } from '@/components/ui/tabs'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
-import LogoutLogo from '@/assets/logout.svg'
+import { HeaderComponent } from '@/components/header'
 
 export default function Dashboard() {
   return (
     <>
       {/* ===== Top Heading ===== */}
-      <Header>
-        <div className='ml-auto flex items-center space-x-4'>
-          <button
-            className="text-gray-600 transition-colors duration-200 hover:text-gray-900"
-          >
-            <img src={LogoutLogo} alt="Logout" className="h-6 px-6" />
-          </button>
-
-        </div>
-      </Header>
+      <HeaderComponent />
 
       {/* ===== Main ===== */}
       <Main>

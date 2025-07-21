@@ -1,4 +1,4 @@
-import { HTMLAttributes, useState } from 'react'
+import { HTMLAttributes, useEffect, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,7 +15,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
-import { useAuth } from '@/context/AuthContext'
+import { useAuth } from '@/context/useAuth'
+import AppLogo from '@/assets/logo.png'
 
 type UserAuthFormProps = HTMLAttributes<HTMLFormElement>
 
@@ -39,8 +40,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [error, setError] = useState<string>("")
   const router = useRouter()
 
-  const { login, setLoginInfo } = useAuth();
-
+  const { login, session, getTokenExpiry } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,16 +50,31 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     },
   })
 
+
+  useEffect(() => {
+    if (session?.user) {
+      router.navigate({ to: '/' });
+    }
+  }, [session, router]);
+
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setError("");
     setIsLoading(true);
 
     try {
-      const response = await login(data.email, data.password);
+      const response = await login.mutateAsync(data);
 
-      if (response.message) {
-        router.navigate({ to: "/otp" });
-        setLoginInfo({ email: data.email, password: data.password });
+      if (response.user) {
+        if (response.session) {
+          const expiry = getTokenExpiry(response.session.access_token);
+          const expiresAttr = expiry ? `; expires=${expiry.toUTCString()}` : '';
+          document.cookie = `access_token=${response.session.access_token}; path=/; samesite=lax${process.env.NODE_ENV === 'production' ? '; secure' : ''}${expiresAttr}`;
+          if (expiry) {
+            // eslint-disable-next-line no-console
+            console.log('Access token expires at:', expiry.toISOString());
+          }
+        }
+        router.navigate({ to: "/" });
       } else {
         setError("Invalid response from server");
       }

@@ -5,8 +5,8 @@ import { z } from 'zod'
 export const taskSchema = z.object({
   id: z.number(),
   name: z.string(),
-  email: z.string(),
-  phone: z.string(),
+  email: z.string().nullable(), // allow null or undefined
+  phone: z.string().nullable(),
 })
 
 export type Task = z.infer<typeof taskSchema>

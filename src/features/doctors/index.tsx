@@ -1,8 +1,4 @@
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-// import { ProfileDropdown } from '@/components/profile-dropdown'
-// import { Search } from '@/components/search'
-// import { ThemeSwitch } from '@/components/theme-switch'
 import { columns } from './components/users-columns'
 import { UsersDialogs } from './components/users-dialogs'
 import { UsersPrimaryButtons } from './components/users-primary-buttons'
@@ -10,27 +6,14 @@ import { UsersTable } from './components/users-table'
 import UsersProvider from './context/users-context'
 import { doctorListSchema } from './data/schema'
 import { doctors } from './data/users'
-import LogoutLogo from '@/assets/logout.svg'
-import { useAuth } from '@/context/AuthContext'
+import { HeaderComponent } from '@/components/header';
 
 export default function Doctors() {
   // Parse user list
   const doctorList = doctorListSchema.parse(doctors)
-  const { logout } = useAuth();
-
   return (
     <UsersProvider>
-      <Header>
-        <div className='ml-auto flex items-center space-x-4'>
-          <button
-            onClick={logout}
-            className="text-gray-600 transition-colors duration-200 hover:text-gray-900"
-          >
-            <img src={LogoutLogo} alt="Logout" className="h-6 px-6" />
-          </button>
-
-        </div>
-      </Header>
+      <HeaderComponent />
 
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
