@@ -15,8 +15,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
-import { login } from '@/supabase/api/api'
-import Cookies from 'js-cookie'
+import { useAuth } from '@/context/AuthContext'
 
 type UserAuthFormProps = HTMLAttributes<HTMLFormElement>
 
@@ -40,6 +39,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [error, setError] = useState<string>("")
   const router = useRouter()
 
+  const { login, setLoginInfo } = useAuth();
+
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,28 +57,46 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     try {
       const response = await login(data.email, data.password);
 
-      console.log("Login response:", response);
-
-
-      if (response.session) {
-        console.log("Login successful:", response.session.access_token);
-        Cookies.set('access_token', response.session.access_token, {
-          expires: 7, // Set cookie to expire in 7 days
-          secure: true, // Use secure flag if your site is served over HTTPS
-          sameSite: 'Strict', // Prevent CSRF attacks
-        });
-        router.navigate({ to: "/" });
+      if (response.message) {
+        router.navigate({ to: "/otp" });
+        setLoginInfo({ email: data.email, password: data.password });
       } else {
         setError("Invalid response from server");
       }
     } catch (err: any) {
       console.log("Login error:", err.detail);
+
       setError(err.detail || "Failed to login");
     } finally {
       setIsLoading(false);
     }
-
   }
+
+  // {
+  //   setError("");
+  //   setIsLoading(true);
+
+  //   try {
+  //     const response = await login(data.email, data.password);
+
+  //     if (response.session) {
+  //       console.log("Login successful:", response.session.access_token);
+  //       Cookies.set('access_token', response.session.access_token, {
+  //         expires: 7, // Set cookie to expire in 7 days
+  //         secure: true, // Use secure flag if your site is served over HTTPS
+  //         sameSite: 'Strict', // Prevent CSRF attacks
+  //       });
+  //       router.navigate({ to: "/" });
+  //     } else {
+  //       setError("Invalid response from server");
+  //     }
+  //   } catch (err: any) {
+  //     console.log("Login error:", err.detail);
+  //     setError(err.detail || "Failed to login");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }
 
   return (
     <Form {...form}>
@@ -125,26 +145,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         <Button className='mt-2' disabled={isLoading}>
           Login
         </Button>
-
-        {/* <div className='relative my-2'>
-          <div className='absolute inset-0 flex items-center'>
-            <span className='w-full border-t' />
-          </div>
-          <div className='relative flex justify-center text-xs uppercase'>
-            <span className='bg-background text-muted-foreground px-2'>
-              Or continue with
-            </span>
-          </div>
-        </div> */}
-
-        {/* <div className='grid grid-cols-2 gap-2'>
-          <Button variant='outline' type='button' disabled={isLoading}>
-            <IconBrandGithub className='h-4 w-4' /> GitHub
-          </Button>
-          <Button variant='outline' type='button' disabled={isLoading}>
-            <IconBrandFacebook className='h-4 w-4' /> Facebook
-          </Button>
-        </div> */}
       </form>
     </Form>
   )

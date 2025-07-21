@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
-import { showSubmittedData } from '@/utils/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -19,6 +18,8 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp'
+import { useAuth } from '@/context/AuthContext'
+import { toast } from 'sonner'
 
 type OtpFormProps = HTMLAttributes<HTMLFormElement>
 
@@ -29,6 +30,7 @@ const formSchema = z.object({
 export function OtpForm({ className, ...props }: OtpFormProps) {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
+  const { loginInfo, verifyOtp } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,14 +39,29 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
 
   const otp = form.watch('otp')
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    showSubmittedData(data)
-
-    setTimeout(() => {
-      setIsLoading(false)
-      navigate({ to: '/' })
-    }, 1000)
+    try {
+      if (loginInfo) {
+        const response = await verifyOtp(loginInfo.email, data.otp);
+        toast.success('OTP verified successfully!', {
+          duration: 1000,
+          position: 'bottom-right',
+        });
+        if (response.password_updated) {
+          navigate({ to: '/' });
+        } else {
+          navigate({ to: '/forgot-password' });
+        }
+      }
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to verify OTP', {
+        duration: 1000,
+        position: 'bottom-right',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (

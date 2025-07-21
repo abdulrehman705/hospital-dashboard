@@ -11,20 +11,19 @@ import UsersProvider from './context/users-context'
 import { doctorListSchema } from './data/schema'
 import { doctors } from './data/users'
 import LogoutLogo from '@/assets/logout.svg'
+import { useAuth } from '@/context/AuthContext'
 
 export default function Doctors() {
   // Parse user list
   const doctorList = doctorListSchema.parse(doctors)
+  const { logout } = useAuth();
 
   return (
     <UsersProvider>
       <Header>
-        {/* <TopNav links={topNav} /> */}
         <div className='ml-auto flex items-center space-x-4'>
-          {/* <Search /> */}
-          {/* <ThemeSwitch /> */}
-          {/* <ProfileDropdown /> */}
           <button
+            onClick={logout}
             className="text-gray-600 transition-colors duration-200 hover:text-gray-900"
           >
             <img src={LogoutLogo} alt="Logout" className="h-6 px-6" />
