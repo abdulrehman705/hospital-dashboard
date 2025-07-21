@@ -4,16 +4,21 @@ import { UsersDialogs } from './components/users-dialogs'
 import { UsersPrimaryButtons } from './components/users-primary-buttons'
 import { UsersTable } from './components/users-table'
 import UsersProvider from './context/users-context'
+// import { doctorListSchema } from './data/schema'
+// import { doctors } from './data/users'
 import { HeaderComponent } from '@/components/header';
 import { useState, useEffect } from 'react'
 import { getDoctors } from '@/supabase/api/api'
 
 export default function Doctors() {
+  // Parse user list
   const [doctorData, setDoctorData] = useState<any[]>([]);
 
+  // Move fetchDoctors out of useEffect so it can be called from anywhere
   const fetchDoctors = async () => {
     try {
       const data = await getDoctors();
+      console.log("Fetched doctors:", data);
       setDoctorData(data);
     } catch (error) {
       console.error("Error fetching doctors:", error);
@@ -43,6 +48,7 @@ export default function Doctors() {
         </div>
       </Main>
 
+      {/* Pass fetchDoctors as onSuccess to UsersDialogs */}
       <UsersDialogs onSuccess={fetchDoctors} />
     </UsersProvider>
   )

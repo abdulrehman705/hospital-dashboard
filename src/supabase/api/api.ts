@@ -114,6 +114,16 @@ const updateDoctor = async (doctor: UpdateDoctorPayload) => {
     return data;
 };
 
+const getDoctorSessions = async () => {
+    const { data, error } = await supabase
+        .from('session')
+        .select('*');
+    if (error) {
+        throw new Error(`Get doctor sessions failed: ${error.message}`);
+    }
+    return data;
+};
+
 export {
     addHospital,
     updateHospital,
@@ -121,5 +131,6 @@ export {
     login,
     getDoctors,
     addDoctor,
-    updateDoctor
+    updateDoctor,
+    getDoctorSessions
 };

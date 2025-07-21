@@ -65,17 +65,20 @@ export function UsersActionDialog({ currentRow, open, onOpenChange, onSuccess }:
   const isEdit = !!currentRow;
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [hospitals, setHospitals] = useState<{ id: string | number, name: string }[]>([]);
+  const [hospitals, setHospitals] = useState<any[]>([]);
 
+  // Fetch hospitals on mount
   useEffect(() => {
-    if (open) {
-      getHospitals().then((data) => {
-        if (Array.isArray(data)) {
-          setHospitals(data.map(h => ({ id: h.id, name: h.name })));
-        }
-      });
-    }
-  }, [open]);
+    const fetchHospitals = async () => {
+      try {
+        const data = await getHospitals();
+        setHospitals(data || []);
+      } catch (error) {
+        setHospitals([]);
+      }
+    };
+    fetchHospitals();
+  }, []);
 
   console.log("message", message);
 
@@ -339,9 +342,9 @@ export function UsersActionDialog({ currentRow, open, onOpenChange, onSuccess }:
                       onValueChange={field.onChange}
                       placeholder='Select a hospital'
                       className='col-span-4 w-full'
-                      items={hospitals.map(({ name, id }) => ({
-                        label: name,
-                        value: id.toString(),
+                      items={hospitals.map((hosp: any) => ({
+                        label: hosp.name,
+                        value: hosp.id?.toString() || '',
                       }))}
                     />
                     <FormMessage className='col-span-4 col-start-3' />

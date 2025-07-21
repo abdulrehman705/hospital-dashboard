@@ -13,8 +13,19 @@ import { Main } from '@/components/layout/main'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 import { HeaderComponent } from '@/components/header'
+import { getHospitals, getDoctors, getDoctorSessions } from '@/supabase/api/api';
+import { useState, useEffect } from 'react';
 
 export default function Dashboard() {
+  const [hospitals, setHospitals] = useState<any[]>([]);
+  const [doctors, setDoctors] = useState<any[]>([]);
+  const [doctorSessions, setDoctorSessions] = useState<any[]>([]);
+  useEffect(() => {
+    getHospitals().then(setHospitals);
+    getDoctors().then(setDoctors);
+    getDoctorSessions().then(setDoctorSessions);
+  }, []);
+
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -24,29 +35,12 @@ export default function Dashboard() {
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
           <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-          {/* <div className='flex items-center space-x-2'>
-            <Button>Download</Button>
-          </div> */}
         </div>
         <Tabs
           orientation='vertical'
           defaultValue='overview'
           className='space-y-4'
         >
-          {/* <div className='w-full overflow-x-auto pb-2'>
-            <TabsList>
-              <TabsTrigger value='overview'>Overview</TabsTrigger>
-              <TabsTrigger value='analytics' disabled>
-                Analytics
-              </TabsTrigger>
-              <TabsTrigger value='reports' disabled>
-                Reports
-              </TabsTrigger>
-              <TabsTrigger value='notifications' disabled>
-                Notifications
-              </TabsTrigger>
-            </TabsList>
-          </div> */}
           <TabsContent value='overview' className='space-y-4'>
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
               <Card>
@@ -68,10 +62,7 @@ export default function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>1429</div>
-                  {/* <p className='text-muted-foreground text-xs'>
-                    +20.1% from last month
-                  </p> */}
+                  <div className='text-2xl font-bold'>{hospitals.length}</div>
                 </CardContent>
               </Card>
               <Card>
@@ -95,7 +86,7 @@ export default function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>2350</div>
+                  <div className='text-2xl font-bold'>{doctors.length}</div>
                   {/* <p className='text-muted-foreground text-xs'>
                     +180.1% from last month
                   </p> */}
@@ -119,7 +110,7 @@ export default function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>2,234</div>
+                  <div className='text-2xl font-bold'>{doctorSessions.length}</div>
                   {/* <p className='text-muted-foreground text-xs'>
                     +19% from last month
                   </p> */}
