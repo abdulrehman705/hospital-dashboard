@@ -13,18 +13,73 @@ import { Main } from '@/components/layout/main'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 import { getHospitals, getDoctors, getDoctorSessions } from '@/supabase/api/api';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Header } from '@/components/layout/header'
 
 export default function Dashboard() {
   const [hospitals, setHospitals] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<any[]>([]);
   const [doctorSessions, setDoctorSessions] = useState<any[]>([]);
+
   useEffect(() => {
     getHospitals().then(setHospitals);
     getDoctors().then(setDoctors);
     getDoctorSessions().then(setDoctorSessions);
   }, []);
+
+  // Calculate sessions per hospital for the last 7 days
+  const overviewData = useMemo(() => {
+    if (!doctorSessions.length || !hospitals.length) {
+      // Fallback fake data for testing
+      return [
+        { name: 'General Center Hospital', total: Math.floor(Math.random() * 10) + 1 },
+        { name: 'Hopewell Hospital', total: Math.floor(Math.random() * 10) + 1 },
+        { name: 'Sunrise Medical Center', total: Math.floor(Math.random() * 10) + 1 },
+        { name: 'Jinnah Hospital', total: Math.floor(Math.random() * 10) + 1 },
+        { name: 'Victoria Hospital', total: Math.floor(Math.random() * 10) + 1 },
+      ];
+    }
+    const now = new Date();
+    const sevenDaysAgo = new Date(now);
+    sevenDaysAgo.setDate(now.getDate() - 6); // include today
+
+    // Filter sessions from the last 7 days
+    const recentSessions = doctorSessions.filter((session: any) => {
+      const createdAt = new Date(session.created_at);
+      return createdAt >= sevenDaysAgo && createdAt <= now && session.hospital_id;
+    });
+
+    // Group by hospital_id and count
+    const sessionCountByHospital: Record<string, number> = {};
+    recentSessions.forEach((session: any) => {
+      const hid = session.hospital_id;
+      if (hid) {
+        sessionCountByHospital[hid] = (sessionCountByHospital[hid] || 0) + 1;
+      }
+    });
+
+    // Map hospital_id to hospital name
+    const data = Object.entries(sessionCountByHospital).map(([hospitalId, total]) => {
+      const hospital = hospitals.find((h: any) => String(h.id) === String(hospitalId));
+      return {
+        name: hospital ? hospital.name : `Hospital ${hospitalId}`,
+        total,
+      };
+    });
+    // If no sessions in last 7 days, show fake data for testing
+    if (data.length === 0) {
+      return [
+        { name: 'General Center Hospital', total: Math.floor(Math.random() * 10) + 1 },
+        { name: 'Hopewell Hospital', total: Math.floor(Math.random() * 10) + 1 },
+        { name: 'Sunrise Medical Center', total: Math.floor(Math.random() * 10) + 1 },
+        { name: 'Jinnah Hospital', total: Math.floor(Math.random() * 10) + 1 },
+        { name: 'Victoria Hospital', total: Math.floor(Math.random() * 10) + 1 },
+      ];
+    }
+    return data;
+  }, [doctorSessions, hospitals]);
+
+  console.log('overviewData', overviewData);
 
   return (
     <>
@@ -113,10 +168,10 @@ export default function Dashboard() {
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
               <Card className='col-span-1 lg:col-span-4'>
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>Overview<span className='text-sm text-muted-foreground'> (Last 7 Days)</span></CardTitle>
                 </CardHeader>
                 <CardContent className='pl-2'>
-                  <Overview />
+                  <Overview data={overviewData} />
                 </CardContent>
               </Card>
               <Card className='col-span-1 lg:col-span-3'>
