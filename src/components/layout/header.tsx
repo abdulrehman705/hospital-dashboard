@@ -21,7 +21,13 @@ export const Header = ({
 
   // LogoutButton implementation
   const handleLogout = () => {
-    Cookies.remove('access_token');
+    // Remove all cookies
+    Object.keys(Cookies.get()).forEach(function (cookieName) {
+      Cookies.remove(cookieName);
+    });
+    // Clear localStorage and sessionStorage
+    localStorage.clear();
+    sessionStorage.clear();
     router.navigate({ to: '/sign-in' });
   };
 

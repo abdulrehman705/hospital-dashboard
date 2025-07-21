@@ -29,7 +29,7 @@ export function AuthenticatedLayout({ children }: Props) {
   if (loading) {
     return (
       <div className='flex items-center flex-col justify-center h-screen w-screen'>
-        <img src={AppLogo} alt='logo' className='w-10 h-10 mb-4' />
+        <img src={AppLogo} alt='logo' className='w-30 h-20 mb-4' />
         <span className='text-lg font-semibold'>Loading...</span>
       </div>
     );

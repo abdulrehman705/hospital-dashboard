@@ -27,16 +27,14 @@ export default function ForgotPassword() {
           <ForgotPasswordForm />
         </CardContent>
         <CardFooter>
-          <p className='text-muted-foreground px-8 text-center text-sm'>
-            Don't have an account?{' '}
+          <div className='w-full flex justify-center items-center'>
             <Link
-              to='/sign-up'
-              className='hover:text-primary underline underline-offset-4'
+              to='/sign-in'
+              className='text-muted-foreground text-sm hover:text-primary underline underline-offset-4'
             >
-              Sign up
+              Back to Sign In
             </Link>
-            .
-          </p>
+          </div>
         </CardFooter>
       </Card>
     </AuthLayout>

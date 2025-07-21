@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useAuth } from '@/context/useAuth'
 
 type ForgotFormProps = HTMLAttributes<HTMLFormElement>
 
@@ -24,21 +25,42 @@ const formSchema = z.object({
 })
 
 export function ForgotPasswordForm({ className, ...props }: ForgotFormProps) {
+  const { requestPasswordReset } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [apiError, setApiError] = useState('')
+  const [success, setSuccess] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { email: '' },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    // eslint-disable-next-line no-console
-    console.log(data)
 
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+    if (!data.email.trim()) {
+      setError("Please enter your registered email")
+      return
+    }
+
+    try {
+      await requestPasswordReset.mutateAsync(data.email);
+      setSuccess(true);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send password reset email';
+      setApiError(errorMessage);
+    }
+  }
+
+  if (success) {
+    return (
+      <div className='flex flex-col items-center justify-center py-8'>
+        <p className='text-center text-base text-muted-foreground'>
+          Check your email to reset your password.
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -61,6 +83,8 @@ export function ForgotPasswordForm({ className, ...props }: ForgotFormProps) {
             </FormItem>
           )}
         />
+        {error && <p className='text-red-500'>{error}</p>}
+        {apiError && <p className='text-red-500'>{apiError}</p>}
         <Button className='mt-2' disabled={isLoading}>
           Continue
         </Button>
