@@ -21,10 +21,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { Doctor } from '../data/schema'
 import { departments } from '../data/data'
+import { hospitals } from '@/features/hospitals/data/hospitals'
 
 const formSchema = z
   .object({
@@ -36,50 +36,17 @@ const formSchema = z
       .string()
       .min(1, { message: 'Email is required.' })
       .email({ message: 'Email is invalid.' }),
-    password: z.string().transform((pwd) => pwd.trim()),
     department: z.string().min(1, { message: 'Department is required.' }),
-    confirmPassword: z.string().transform((pwd) => pwd.trim()),
+    hospitalId: z.string().min(1, { message: 'Hospital is required.' }),
     isEdit: z.boolean(),
   })
-  .superRefine(({ isEdit, password, confirmPassword }, ctx) => {
-    if (!isEdit || (isEdit && password !== '')) {
-      if (password === '') {
+  .superRefine(({ isEdit, hospitalId }, ctx) => {
+    if (!isEdit || (isEdit && hospitalId !== '')) {
+      if (hospitalId === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Password is required.',
-          path: ['password'],
-        })
-      }
-
-      if (password.length < 8) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Password must be at least 8 characters long.',
-          path: ['password'],
-        })
-      }
-
-      if (!password.match(/[a-z]/)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Password must contain at least one lowercase letter.',
-          path: ['password'],
-        })
-      }
-
-      if (!password.match(/\d/)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Password must contain at least one number.',
-          path: ['password'],
-        })
-      }
-
-      if (password !== confirmPassword) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Passwords don't match.",
-          path: ['confirmPassword'],
+          message: 'Hospital is required.',
+          path: ['hospitalId'],
         })
       }
     }
@@ -99,8 +66,6 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
     defaultValues: isEdit
       ? {
         ...currentRow,
-        password: '',
-        confirmPassword: '',
         isEdit,
       }
       : {
@@ -110,8 +75,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
         email: '',
         department: '',
         phoneNumber: '',
-        password: '',
-        confirmPassword: '',
+        hospitalId: '',
         isEdit,
       },
   })
@@ -121,8 +85,6 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
     showSubmittedData(values)
     onOpenChange(false)
   }
-
-  const isPasswordTouched = !!form.formState.dirtyFields.password
 
   return (
     <Dialog
@@ -268,39 +230,22 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: Props) {
               />
               <FormField
                 control={form.control}
-                name='password'
+                name='hospitalId'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Password
+                      Hospital
                     </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='confirmPassword'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        disabled={!isPasswordTouched}
-                        placeholder='e.g., S3cur3P@ssw0rd'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
+                    <SelectDropdown
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                      placeholder='Select a hospital'
+                      className='col-span-4'
+                      items={hospitals.map(({ name, id }) => ({
+                        label: name,
+                        value: id.toString(),
+                      }))}
+                    />
                     <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>
                 )}
